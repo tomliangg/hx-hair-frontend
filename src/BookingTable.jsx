@@ -2,11 +2,13 @@ import { format, getTime } from "date-fns";
 import { useState, useEffect } from "react";
 import classNames from "classnames";
 import './table.css'
+import { BookingModal } from "./BookingModal";
 
 const BookingTable = () => {
-    const currentDate = new Date();
+    const [currentDate, setCurrentDate] = useState(new Date());
     const [weekData, setWeekData] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchWeekData = async () => {
@@ -23,10 +25,11 @@ const BookingTable = () => {
         }
 
         fetchWeekData();
-    }, [setWeekData]);
+    }, [setWeekData, currentDate]);
 
     const handleSlotClick = (timeslot) => {
         setSelectedSlot(timeslot);
+        setModalOpen(true);
     }
 
     const weekDays = weekData.map((day, dayIndex) => (
@@ -50,6 +53,7 @@ const BookingTable = () => {
     return (
         <div className="booking-table">
             {weekDays}
+            <BookingModal setCurrentDate={setCurrentDate} selectedSlot={selectedSlot} setSelectedSlot={setSelectedSlot} open={modalOpen} setOpen={setModalOpen} />
         </div>
     )
 }
